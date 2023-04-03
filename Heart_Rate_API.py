@@ -41,6 +41,9 @@ def create_session():
     })
 
     def api_calls(r, *args, **kwargs):
+        """Returns the number of API Calls left for the hour. 
+        When the number of API calls drops below 10 the program will
+        sleep for 1 hour."""
         calls_left = r.headers['Fitbit-Rate-Limit-Remaining']
         print(calls_left)
         if int(calls_left) <= 10:
