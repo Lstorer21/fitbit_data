@@ -56,7 +56,7 @@ def create_session():
 #Make API Request and collect heart rate data
 def main(date):
     sess = create_session()
-    df = pd.read_sql_query("SELECT * FROM dbo.Heart_Rate_Data", conn)
+    df = pd.read_sql_query("SELECT * FROM fact_heart_rate", conn)
     if date in df.values:
         print('skip')
     else:
@@ -68,12 +68,14 @@ def main(date):
             Day  = date
             Time = json_data[dict_item]['time']
             heart_rate = json_data[dict_item]['value']
-            ID = Day.strftime('%Y%m%d') + Time
-            conn.execute('''INSERT INTO dbo.Heart_Rate_Data VALUES(?,?,?,?)''', (ID, Day, Time, heart_rate))
+            ID = (pd.to_datetime(Day).strftime('%Y%m%d') + Time).replace(':','')
+            conn.execute(f'''INSERT INTO fact_heart_rate (id, date, time, heart_rate) 
+                    VALUES({ID}, CAST('{Day}' AS date), CAST('{Time}' AS time(6)), {heart_rate})''')
         return
 
 
 for date in dates:
+    print(date)
     main(date)
     sleep(5)
 
