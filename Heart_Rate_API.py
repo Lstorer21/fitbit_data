@@ -9,7 +9,7 @@ from time import sleep
 import creds
 
 #Create engine and connection to postgresql database
-engine = create_engine(f'postgresql://{creds.DB_USER}:{creds.DB_PASS}@{creds.DB_HOST}:5432/{creds.DB_NAME}', echo=False)
+engine = create_engine(f'postgresql://{creds.DB_USER}:{creds.DB_PASS}@{creds.DB_HOST}:5433/{creds.DB_NAME}', echo=False)
 conn = engine.connect()
 
 # Date Range from previous 7 days
@@ -20,7 +20,7 @@ def previous_week_range(date):
     end_date = date - dt.timedelta(days = 1)
     return pd.date_range(start_date, end_date).strftime('%Y-%m-%d')
 
-dates = previous_week_range(today)
+dates = previous_week_range(date(2023,4,15))
 
 
 # Headers
@@ -65,19 +65,25 @@ def main(date):
         json_data = resp.json()['activities-heart-intraday']['dataset']
 
         for dict_item in range(len(json_data)):
-            Day  = date
-            Time = json_data[dict_item]['time']
-            heart_rate = json_data[dict_item]['value']
-            ID = (pd.to_datetime(Day).strftime('%Y%m%d') + Time).replace(':','')
-            conn.execute(f'''INSERT INTO fact_heart_rate (id, date, time, heart_rate) 
-                    VALUES({ID}, CAST('{Day}' AS date), CAST('{Time}' AS time(6)), {heart_rate})''')
+            try:
+                Day  = date
+                Time = json_data[dict_item]['time']
+                heart_rate = json_data[dict_item]['value']
+                ID = (pd.to_datetime(Day).strftime('%Y%m%d') + Time).replace(':','')
+                conn.execute(f'''INSERT INTO fact_heart_rate (id, date, time, heart_rate) 
+                        VALUES({ID}, CAST('{Day}' AS date), CAST('{Time}' AS time(6)), {heart_rate})''')              
+            except Exception as error:
+                print(error)
         return
+
 
 
 for date in dates:
     print(date)
     main(date)
     sleep(5)
+
+
 
 print('Complete')
 

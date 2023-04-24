@@ -18,11 +18,11 @@ def previous_week_range(date):
     end_date = date - dt.timedelta(days = 1)
     return pd.date_range(start_date, end_date).strftime('%Y-%m-%d')
 
-dates = previous_week_range(today)
+dates = previous_week_range(date(2023,4,14))
 
 
 #Create engine and connection to postgresql database
-engine = create_engine(f'postgresql://{creds.DB_USER}:{creds.DB_PASS}@{creds.DB_HOST}:5432/{creds.DB_NAME}', echo=False)
+engine = create_engine(f'postgresql://{creds.DB_USER}:{creds.DB_PASS}@{creds.DB_HOST}:5433/{creds.DB_NAME}', echo=False)
 conn = engine.connect()
 
 
@@ -97,6 +97,7 @@ for date in dates:
     print(date)
     main(date)
     sleep(5)
+
 
 print('Complete')
 
