@@ -1,10 +1,10 @@
-Fitbit Data Analytics Project
+# Fitbit Data Analytics Project
 
-Overview
+## Overview
 
 This project involves extracting heart rate and sleep data from Fitbit's API using Python, transforming the data, and loading it into a PostgreSQL database. The data is then visualized using Power BI to create a dashboard showcasing the results.
 
-Project Structure
+## Project Structure
 
 •	Heart_Rate_API.py: Python script for extracting heart rate and sleep data from Fitbit's API.
 
@@ -14,7 +14,7 @@ Project Structure
 
 •	Fitbit_Dashboard.pbix: Power BI file containing the dashboard visualizations.
   
-Dependencies
+## Dependencies
 
 •	Python 3.11.2
 o	Requests library
