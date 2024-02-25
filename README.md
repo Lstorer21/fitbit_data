@@ -17,6 +17,7 @@ This project involves extracting heart rate and sleep data from Fitbit's API usi
 ## Dependencies
 
 •	Python 3.11.2
+
 o	Requests library
  
 o	Pandas library
